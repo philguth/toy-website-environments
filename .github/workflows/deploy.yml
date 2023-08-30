@@ -9,12 +9,17 @@ on:
       resourceGroupName:
         required: true
         type: string
+      reviewApiUrl:
+        required: true
+        type: string
     secrets:
       AZURE_CLIENT_ID:
         required: true
       AZURE_TENANT_ID:
         required: true
       AZURE_SUBSCRIPTION_ID:
+        required: true
+      reviewApiKey:
         required: true
 
 
@@ -38,6 +43,8 @@ jobs:
            template: ./deploy/main.bicep
            parameters: >
              environmentType=${{ inputs.environmentType }}
+             reviewApiUrl=${{ inputs.reviewApiUrl }}
+             reviewApiKey=${{ secrets.reviewApiKey }}
            deploymentMode: Validate
        - if: inputs.environmentType == 'Production'
          uses: azure/arm-deploy@v1
@@ -48,6 +55,8 @@ jobs:
            template: ./deploy/main.bicep
            parameters: >
              environmentType=${{ inputs.environmentType }}
+             reviewApiUrl=${{ inputs.reviewApiUrl }}
+             reviewApiKey=${{ secrets.reviewApiKey }}
            additionalArguments: --what-if
 
     deploy:
@@ -74,6 +83,8 @@ jobs:
          template: ./deploy/main.bicep
          parameters: >
            environmentType=${{ inputs.environmentType }}
+           reviewApiUrl=${{ inputs.reviewApiUrl }}
+           reviewApiKey=${{ secrets.reviewApiKey }}
 
     smoke-test:
      runs-on: ubuntu-latest
